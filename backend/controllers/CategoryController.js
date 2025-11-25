@@ -42,7 +42,7 @@ export const getCategoryById = async (req, res) => {
   const categoryById = await db.Category.findByPk(id);
   if (!categoryById) {
     return res.status(404).json({
-      message: "Không tìm thấy danh mục theo ID",
+      message: "Không tìm thấy danh mục theo Id",
     });
   }
   res.status(200).json({

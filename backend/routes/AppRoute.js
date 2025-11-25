@@ -10,6 +10,8 @@ import * as NewsDetailsController from "../controllers/NewsDetailsController.js"
 import * as BannerController from "../controllers/BannerController.js";
 import * as BannerDetailsController from "../controllers/BannerDetailsController.js";
 import * as ImagesController from "../controllers/ImagesController.js";
+import * as CartsController from "../controllers/CartController.js";
+import * as CartItemController from "../controllers/CartItemController.js";
 //Hàm xử lý đồng bộ trycatch
 import asyncHandleCatch from "../middleware/asyncHandleCatch.js";
 //Hàm validate
@@ -42,6 +44,8 @@ import InsertBannerDetailsRequest from "../dtos/requests/BannerDetails/InsertBan
 import UpdateBannerDetailsRequest from "../dtos/requests/BannerDetails/updateBannerDetailsRequest.js";
 // middleware upload image
 import uploadImages from "../middleware/imagesUpload.js";
+// schema validate cho cart
+import InsertCartScheme from "../dtos/requests/Carts/InsertCartsSchema.js";
 const AppRouter = (app) => {
   //router products
   router.get("/products", asyncHandleCatch(ProductController.getProducts));
@@ -229,6 +233,30 @@ const AppRouter = (app) => {
   router.get(
     "/images/:fileImage",
     asyncHandleCatch(ImagesController.viewImage)
+  );
+
+  router.delete(
+    "/images/:fileImage",
+    uploadImages.array("images", 1),
+    asyncHandleCatch(ImagesController.deleteImage)
+  );
+
+  //CART
+  router.get("/carts", asyncHandleCatch(CartsController.getCart));
+  router.get("/carts/:id", asyncHandleCatch(CartsController.getCartById));
+  router.post(
+    "/carts",
+    validateMiddleware(InsertCartScheme),
+    asyncHandleCatch(CartsController.insertCart)
+  );
+
+  router.delete("/carts/:id", asyncHandleCatch(CartsController.deleteCart));
+
+  //CARTITEM
+  router.get("/cart-item", asyncHandleCatch(CartItemController.getCartItem));
+  router.get(
+    "/cart-item/:id",
+    asyncHandleCatch(CartItemController.getCartItemById)
   );
 
   //Gắn router vào app

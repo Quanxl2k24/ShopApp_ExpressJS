@@ -32,4 +32,28 @@ const viewImage = async (req, res) => {
   });
 };
 
-export { imageUpload, viewImage };
+const deleteImage = (req, res) => {
+  const { fileImage } = req.params;
+  const imagePath = path.join(__dirname, "../upload", fileImage);
+
+  fs.access(imagePath, fs.constants.F_OK, (error) => {
+    if (error) {
+      return res.status(404).json({
+        message: "Không có ảnh",
+      });
+    }
+    fs.unlink(imagePath, (err) => {
+      if (err) {
+        return res.status(500).json({
+          message: "Không thể xoá ảnh",
+        });
+      }
+
+      return res.status(200).json({
+        message: "Xoá thành công ảnh",
+      });
+    });
+  });
+};
+
+export { imageUpload, viewImage, deleteImage };
